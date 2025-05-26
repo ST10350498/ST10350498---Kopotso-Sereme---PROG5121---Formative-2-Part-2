@@ -13,61 +13,51 @@ public class LoginTestTest {
         loginTest = new LoginTest();
     }
 
-    // Test for valid username
     @Test
     public void testValidUsername() {
         assertTrue(loginTest.checkUserName("user_01"), "Username with underscore and >=6 chars should be valid.");
     }
 
-    // Test for invalid username (no underscore)
     @Test
     public void testInvalidUsername_NoUnderscore() {
         assertFalse(loginTest.checkUserName("user01"), "Username without underscore should be invalid.");
     }
 
-    // Test for invalid username (less than 6 characters)
     @Test
     public void testInvalidUsername_ShortLength() {
         assertFalse(loginTest.checkUserName("u_1"), "Username with less than 6 characters should be invalid.");
     }
 
-    // Test for valid password
     @Test
     public void testValidPassword() {
         assertTrue(loginTest.checkPasswordComplexity("Password1!"), "Password meeting all criteria should be valid.");
     }
 
-    // Test for invalid password (no uppercase letter)
     @Test
     public void testInvalidPassword_NoUppercase() {
         assertFalse(loginTest.checkPasswordComplexity("password1!"), "Password without uppercase letter should be invalid.");
     }
 
-    // Test for invalid password (no number)
     @Test
     public void testInvalidPassword_NoNumber() {
         assertFalse(loginTest.checkPasswordComplexity("Password!"), "Password without number should be invalid.");
     }
 
-    // Test for invalid password (no special character)
     @Test
     public void testInvalidPassword_NoSpecialChar() {
         assertFalse(loginTest.checkPasswordComplexity("Password1"), "Password without special character should be invalid.");
     }
 
-    // Test for valid cellphone number
     @Test
     public void testValidCellPhoneNumber() {
         assertTrue(loginTest.checkCellPhoneNumber("+27123456789"), "Valid SA cellphone number should pass.");
     }
 
-    // Test for invalid cellphone number (wrong format)
     @Test
     public void testInvalidCellPhoneNumber() {
         assertFalse(loginTest.checkCellPhoneNumber("0123456789"), "Cellphone number without +27 prefix should fail.");
     }
 
-    // Test user registration and authentication
     @Test
     public void testUserRegistrationAndAuthentication() {
         String username = "user_01";
@@ -82,7 +72,6 @@ public class LoginTestTest {
         assertTrue(loginTest.isCorrectPassword(password), "Registered password should be recognized.");
     }
 
-    // Test authentication with incorrect username
     @Test
     public void testAuthentication_IncorrectUsername() {
         String username = "user_01";
@@ -96,7 +85,6 @@ public class LoginTestTest {
         assertFalse(loginTest.isCorrectUsername("wrong_user"), "Incorrect username should not be recognized.");
     }
 
-    // Test authentication with incorrect password
     @Test
     public void testAuthentication_IncorrectPassword() {
         String username = "user_01";
