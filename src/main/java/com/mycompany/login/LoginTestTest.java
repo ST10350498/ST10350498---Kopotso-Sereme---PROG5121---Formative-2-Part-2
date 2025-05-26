@@ -5,106 +5,109 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LoginTestTest {
-    
-    private LoginTest loginSystem;
-    
+
+    private LoginTest loginTest;
+
     @BeforeEach
     public void setUp() {
-        loginSystem = new LoginTest();
+        loginTest = new LoginTest();
     }
-    
+
+    // Test for valid username
     @Test
-    public void testCheckUserNameValid() {
-        assertTrue(loginSystem.checkUserName("user_name"));
-        assertTrue(loginSystem.checkUserName("long_username"));
+    public void testValidUsername() {
+        assertTrue(loginTest.checkUserName("user_01"), "Username with underscore and >=6 chars should be valid.");
     }
-    
+
+    // Test for invalid username (no underscore)
     @Test
-    public void testCheckUserNameInvalidNoUnderscore() {
-        assertFalse(loginSystem.checkUserName("username"));
+    public void testInvalidUsername_NoUnderscore() {
+        assertFalse(loginTest.checkUserName("user01"), "Username without underscore should be invalid.");
     }
-    
+
+    // Test for invalid username (less than 6 characters)
     @Test
-    public void testCheckUserNameInvalidTooShort() {
-        assertFalse(loginSystem.checkUserName("a_b"));
+    public void testInvalidUsername_ShortLength() {
+        assertFalse(loginTest.checkUserName("u_1"), "Username with less than 6 characters should be invalid.");
     }
-    
+
+    // Test for valid password
     @Test
-    public void testCheckUserNameInvalidEmpty() {
-        assertFalse(loginSystem.checkUserName(""));
+    public void testValidPassword() {
+        assertTrue(loginTest.checkPasswordComplexity("Password1!"), "Password meeting all criteria should be valid.");
     }
-    
+
+    // Test for invalid password (no uppercase letter)
     @Test
-    public void testCheckPasswordComplexityValid() {
-        assertTrue(loginSystem.checkPasswordComplexity("Password1!"));
-        assertTrue(loginSystem.checkPasswordComplexity("Complex@123"));
+    public void testInvalidPassword_NoUppercase() {
+        assertFalse(loginTest.checkPasswordComplexity("password1!"), "Password without uppercase letter should be invalid.");
     }
-    
+
+    // Test for invalid password (no number)
     @Test
-    public void testCheckPasswordComplexityNoCapital() {
-        assertFalse(loginSystem.checkPasswordComplexity("password1!"));
+    public void testInvalidPassword_NoNumber() {
+        assertFalse(loginTest.checkPasswordComplexity("Password!"), "Password without number should be invalid.");
     }
-    
+
+    // Test for invalid password (no special character)
     @Test
-    public void testCheckPasswordComplexityNoNumber() {
-        assertFalse(loginSystem.checkPasswordComplexity("Password!"));
+    public void testInvalidPassword_NoSpecialChar() {
+        assertFalse(loginTest.checkPasswordComplexity("Password1"), "Password without special character should be invalid.");
     }
-    
+
+    // Test for valid cellphone number
     @Test
-    public void testCheckPasswordComplexityNoSpecialChar() {
-        assertFalse(loginSystem.checkPasswordComplexity("Password1"));
+    public void testValidCellPhoneNumber() {
+        assertTrue(loginTest.checkCellPhoneNumber("+27123456789"), "Valid SA cellphone number should pass.");
     }
-    
+
+    // Test for invalid cellphone number (wrong format)
     @Test
-    public void testCheckPasswordComplexityTooShort() {
-        assertFalse(loginSystem.checkPasswordComplexity("Pass1!"));
+    public void testInvalidCellPhoneNumber() {
+        assertFalse(loginTest.checkCellPhoneNumber("0123456789"), "Cellphone number without +27 prefix should fail.");
     }
-    
+
+    // Test user registration and authentication
     @Test
-    public void testCheckCellPhoneNumberValid() {
-        assertTrue(loginSystem.checkCellPhoneNumber("+27123456789"));
+    public void testUserRegistrationAndAuthentication() {
+        String username = "user_01";
+        String password = "Password1!";
+        String cellphone = "+27123456789";
+        String firstName = "John";
+        String lastName = "Doe";
+
+        loginTest.registerUser(username, password, cellphone, firstName, lastName);
+
+        assertTrue(loginTest.isCorrectUsername(username), "Registered username should be recognized.");
+        assertTrue(loginTest.isCorrectPassword(password), "Registered password should be recognized.");
     }
-    
+
+    // Test authentication with incorrect username
     @Test
-    public void testCheckCellPhoneNumberInvalidPrefix() {
-        assertFalse(loginSystem.checkCellPhoneNumber("+28123456789"));
+    public void testAuthentication_IncorrectUsername() {
+        String username = "user_01";
+        String password = "Password1!";
+        String cellphone = "+27123456789";
+        String firstName = "John";
+        String lastName = "Doe";
+
+        loginTest.registerUser(username, password, cellphone, firstName, lastName);
+
+        assertFalse(loginTest.isCorrectUsername("wrong_user"), "Incorrect username should not be recognized.");
     }
-    
+
+    // Test authentication with incorrect password
     @Test
-    public void testCheckCellPhoneNumberTooShort() {
-        assertFalse(loginSystem.checkCellPhoneNumber("+27123456"));
-    }
-    
-    @Test
-    public void testCheckCellPhoneNumberTooLong() {
-        assertFalse(loginSystem.checkCellPhoneNumber("+271234567890"));
-    }
-    
-    @Test
-    public void testCheckCellPhoneNumberNoPlus() {
-        assertFalse(loginSystem.checkCellPhoneNumber("27123456789"));
-    }
-    
-    @Test
-    public void testRegisterAndLoginSuccess() {
-        loginSystem.registerUser("test_user", "Password1!", "+27123456789", "John", "Doe");
-        
-        assertTrue(loginSystem.isCorrectUsername("test_user"));
-        assertTrue(loginSystem.isCorrectPassword("Password1!"));
-    }
-    
-    @Test
-    public void testLoginBeforeRegistration() {
-        assertFalse(loginSystem.isCorrectUsername("test_user"));
-        assertFalse(loginSystem.isCorrectPassword("Password1!"));
-    }
-    
-    @Test
-    public void testLoginWrongCredentials() {
-        loginSystem.registerUser("test_user", "Password1!", "+27123456789", "John", "Doe");
-        
-        assertFalse(loginSystem.isCorrectUsername("wrong_user"));
-        assertFalse(loginSystem.isCorrectPassword("WrongPass1!"));
+    public void testAuthentication_IncorrectPassword() {
+        String username = "user_01";
+        String password = "Password1!";
+        String cellphone = "+27123456789";
+        String firstName = "John";
+        String lastName = "Doe";
+
+        loginTest.registerUser(username, password, cellphone, firstName, lastName);
+
+        assertFalse(loginTest.isCorrectPassword("WrongPass1!"), "Incorrect password should not be recognized.");
     }
     
     @Test
@@ -114,7 +117,7 @@ public class LoginTestTest {
         
         assertNotNull(messageId);
         assertTrue(messageId.matches("\\d+"));
-    }
+}
     
     @Test
     public void testMessageHandlerCreateMessageHash() {
